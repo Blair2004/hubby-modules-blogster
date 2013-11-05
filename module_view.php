@@ -81,27 +81,27 @@
 			$email	=	'';
 		}
 		// REPLY FORM
-		$theme->defineSingleArtForm(array(
+		$theme->defineForm(array(
 			'text'			=>	'Pseudo',
 			'name'			=>	'pseudo',
 			'value'			=>	$pseudo,
 			'subtype'		=>	'text',
 			'type'			=>	'input'
 		));
-		$theme->defineSingleArtForm(array(
+		$theme->defineForm(array(
 			'text'			=>	'Entrer votre mail',
 			'name'			=>	'mail',
 			'value'			=>	$email,
 			'subtype'		=>	'text',
 			'type'			=>	'input'
 		));
-		$theme->defineSingleArtForm(array(
+		$theme->defineForm(array(
 			'text'			=>	'Entrer votre commentaire',
 			'name'			=>	'content',
 			'subtype'		=>	'text',
 			'type'			=>	'textarea'
 		));
-		$theme->defineSingleArtForm(array(
+		$theme->defineForm(array(
 			'subtype'		=>	'submit',
 			'value'			=>	'Poster',
 			'type'			=>	'input'
@@ -167,96 +167,12 @@
 	}
 	else if($section == 'blogtest')
 	{
-		// Define Caroussel
-		$theme->defineCaroussel(
-			'Offer the best for me',
-			'We should get foward, but there is not any content your young thing, We should get foward, but there is not any content your young thing, We should get foward, but there is not any content your young thing',
-			'http://localhost/templates/nouveau/deadstocker/deadstocker/images/img1.jpg',
-			'#',
-			'null'
-		);
-		$theme->defineCaroussel(
-			'Offer the best for me',
-			'ZADAZD oward, but there is not any content your young thing, We should get foward, but there is not any content your young thing, We should get foward, but there is not any content your young thing',
-			'http://localhost/templates/nouveau/deadstocker/deadstocker/images/img2.jpg',
-			'#',
-			'null'
-		);
-		$theme->defineCaroussel(
-			'Offer the best for me',
-			'ZADAZD oward, but there is not any content your young thing, We should get foward, but there is not any content your young thing, We should get foward, but there is not any content your young thing',
-			'http://localhost/templates/nouveau/deadstocker/deadstocker/images/img3.jpg',
-			'#',
-			'null'
-		);
-		$theme->defineCaroussel(
-			'Offer the best for me',
-			'ZADAZD oward, but there is not any content your young thing, We should get foward, but there is not any content your young thing, We should get foward, but there is not any content your young thing',
-			'http://localhost/templates/nouveau/deadstocker/deadstocker/images/img4.jpg',
-			'#',
-			'null'
-		);
-		// End Defining Caroussel
-		$theme->defineOnTopContent(
-			'http://localhost/templates/nouveau/deadstocker/deadstocker/images/lady.png',
-			'Unique element',
-			'This is the suposed content, but do we have really something to do ?',
-			'#',
-			null
-		);
-		$theme->defineOnTopContent(
-			'http://localhost/templates/nouveau/deadstocker/deadstocker/images/center-bottom.png',
-			'Unique element',
-			'This is the suposed content, but do we have really something to do ?',
-			'#',
-			null
-		);
-		$theme->defineOnTopContent(
-			'http://localhost/templates/nouveau/deadstocker/deadstocker/images/bottom-1.png',
-			'Unique element',
-			'This is the suposed content, but do we have really something to do ?',
-			'#',
-			null
-		);
-		$theme->defineOnTopContent(
-			'http://localhost/templates/nouveau/deadstocker/deadstocker/images/lady.png',
-			'Unique element',
-			'This is the suposed content, but do we have really something to do ?',
-			'#',
-			null
-		);
-		$theme->defineOnTopContent(
-			'http://localhost/templates/nouveau/deadstocker/deadstocker/images/center-bottom.png',
-			'Unique element',
-			'This is the suposed content, but do we have really something to do ?',
-			'#',
-			null
-		);
-		$theme->defineOnTopContent(
-			'http://localhost/templates/nouveau/deadstocker/deadstocker/images/bottom-1.png',
-			'Unique element',
-			'This is the suposed content, but do we have really something to do ?',
-			'#',
-			null
-		);
-		// Tab Show Case
-		$theme->defineTabShowCase('Bonjour','Blair le boss');
-		$theme->defineTabShowCase('Bonsoir','Blair le super boss');
-		// TextList
-		$theme->defineTextListTitle('Un titre');
-		$theme->defineTextList('Nouveauté','Oui tout se passe pour le mieux','','#','');
-		$theme->defineTextList('Nouveauté','Oui tout se passe pour le mieux','','#','');
-		$theme->defineTextList('Nouveauté','Oui tout se passe pour le mieux','','#','');
-		$theme->defineTextList('Nouveauté','Oui tout se passe pour le mieux','','#','');
-		$theme->defineTextList('Nouveauté','Oui tout se passe pour le mieux','','#','');
-		$theme->defineTextList('Nouveauté','Oui tout se passe pour le mieux','','#','');
-		$theme->defineTextList('Nouveauté','Oui tout se passe pour le mieux','','#','');
-		$theme->defineTextList('Nouveauté','Oui tout se passe pour le mieux','','#','');
-		// About us
-		$theme->defineIndexAboutUs('cho');
-		// GAllery Show Case
-		$theme->defineGalleryShowCase('Mon produit','Ma description','http://localhost/sliders/Nivo-Slider-master/demo/images/toystory.jpg','http://localhost/sliders/Nivo-Slider-master/demo/images/toystory.jpg','#','');
-		$theme->defineGalleryShowCase('Mon produit 2','Ma description 2','http://localhost/sliders/Nivo-Slider-master/demo/images/toystory.jpg','http://localhost/sliders/Nivo-Slider-master/demo/images/toystory.jpg','#','');
-		$theme->defineGalleryShowCase('Mon produit 3','Ma description 3','http://localhost/sliders/Nivo-Slider-master/demo/images/toystory.jpg','http://localhost/sliders/Nivo-Slider-master/demo/images/toystory.jpg','#','');
-		$theme->parseIndex();
+		$theme->defineContactAddress('Notre contact', 'utilisez ces num&eacute;ros pour nous contacter');
+		$theme->defineContactContent('besoin d\'aide ? contactez nous');
+		$theme->defineContactAddressItem('phone','3992039394');
+		$theme->defineContactAddressItem('phone','2304958576');
+		$theme->defineContactAddressItem('email','fakecontact@fakebox.com');
+		$theme->defineContactFormHeader();
+		$theme->
+		$theme->parseContact();
 	}

@@ -106,7 +106,7 @@ class News_module_controller
 		$this->hubby->setTitle('Test');
 		$this->hubby->setDescription('Nothing');
 		// Load View		
-		$this->data['section']		=		'test';
+		$this->data['section']		=		'blogtest';
 		$this->data['module_content']		=	$this->core->load->view(MODULES_DIR.$this->data['module'][0]['ENCRYPTED_DIR'].'/module_view',$this->data,true,TRUE);
 		
 		$this->data['theme']->header($this->data);
