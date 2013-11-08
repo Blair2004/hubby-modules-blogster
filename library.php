@@ -2,13 +2,16 @@
 /// -------------------------------------------------------------------------------------------------------------------///
 global $NOTICE_SUPER_ARRAY;
 /// -------------------------------------------------------------------------------------------------------------------///
-$or['categoryCreated']			=	'<span class="success">La cat&eacute;gorie &agrave; &eacute;t&eacute; correctement cr&eacute;e</span>';
-$or['categoryAldreadyCreated']	=	'<span class="error">Cette cat&eacute;gorie existe d&eacute;j&agrave;</span>';
-$or['unknowCat']				=	'<span class="error">Cette cat&eacute;gorie est inexistante</span>';
-$or['categoryUpdated']			=	'<span class="success">La mise &agrave; jour &agrave; r&eacute;ussie</span>';
-$or['CatDeleted']				=	'<span class="success">La cat&eacute;gorie &agrave; &eacute;t&eacute; supprim&eacute; avec succ&egrave;s</span>';
-$or['CatNotEmpty']				=	'<span class="error">Cette cat&eacute;gorie ne peut pas &ecirc;tre supprim&eacute;e, car il existe des publications qui y sont rattach&eacute;es. Changez la cat&eacute;gorie de ces publications avant de supprimer cette cat&eacute;gorie.</span>';
-$or['noCategoryCreated']		=	'<span class="error"><i class="icon-warning"></i> Avant de publier un article, vous devez cr&eacute;er une cat&eacute;gorie.</span>';
+$or['categoryCreated']			=	'<span class="hubby_success">La cat&eacute;gorie &agrave; &eacute;t&eacute; correctement cr&eacute;e</span>';
+$or['categoryAldreadyCreated']	=	'<span class="hubby_error">Cette cat&eacute;gorie existe d&eacute;j&agrave;</span>';
+$or['unknowCat']				=	'<span class="hubby_error">Cette cat&eacute;gorie est inexistante</span>';
+$or['categoryUpdated']			=	'<span class="hubby_success">La mise &agrave; jour &agrave; r&eacute;ussie</span>';
+$or['CatDeleted']				=	'<span class="hubby_success">La cat&eacute;gorie &agrave; &eacute;t&eacute; supprim&eacute; avec succ&egrave;s</span>';
+$or['CatNotEmpty']				=	'<span class="hubby_error">Cette cat&eacute;gorie ne peut pas &ecirc;tre supprim&eacute;e, car il existe des publications qui y sont rattach&eacute;es. Changez la cat&eacute;gorie de ces publications avant de supprimer cette cat&eacute;gorie.</span>';
+$or['noCategoryCreated']		=	'<span class="hubby_error"><i class="icon-warning"></i> Avant de publier un article, vous devez cr&eacute;er une cat&eacute;gorie.</span>';
+$or['connectToComment']			=	'<span class="hubby_error"><i class="icon-warning"></i> Vous devez &ecirc;tre connect&eacute; pour commenter.</span>';
+$or['unknowComments']			=	'<span class="hubby_error"><i class="icon-warning"></i> Commentaire introuvable.</span>';
+$or['commentDeleted']			=	'<span class="hubby_success"><i class="icon-checkmark"></i> Commentaire supprim&eacute;.</span>';
 
 /// -------------------------------------------------------------------------------------------------------------------///
 $NOTICE_SUPER_ARRAY = $or;
@@ -196,6 +199,115 @@ $NOTICE_SUPER_ARRAY = $or;
 				$this->core->db->where('ID',$id)->delete('hubby_news_category');
 				return 'CatDeleted';
 			}
+			public function countComments()
+			{
+				$query	=	$this->core->db->get('hubby_comments');
+				$result	=	$query->result_array();
+				return count($result);
+			}
+			public function getComments($start,$end)
+			{
+				$query	=	$this->core->db->order_by('ID','desc')->limit($end,$start)->get('hubby_comments');
+				$result	=	$query->result_array();
+				return $result;
+			}
+			public function setBlogsterSetting($validateComments,$allowPublicComments)
+			{
+				/* 
+				/*	1 : TRUE; 0 : FALSE
+				*/
+				$query	=	$this->core->db->get('hubby_news_setting');
+				$result	=	$query->result_array();
+				if(count($result) > 0)
+				{
+					if($allowPublicComments)
+					{
+						$APC	=	1;
+					}
+					else
+					{
+						$APC	=	0;
+					}
+					if($validateComments)
+					{
+						$VC		=	1;
+					}
+					else
+					{
+						$VC		=	0;
+					}
+					return $this->core->db->update('hubby_news_setting',array(
+						'EVERYONEPOST'		=>	$APC,
+						'APPROVEBEFOREPOST'	=>	$VC // Vlidate comments
+					));
+				}
+				else
+				{
+					if($allowPublicComments)
+					{
+						$APC 		=	1; // Allow pulic comments
+					}
+					else
+					{
+						$APC 		=	0; // Allow pulic comments
+					}
+					if($validateComments)
+					{
+						$VC		=	1;
+					}
+					else
+					{
+						$VC		=	0;
+					}
+					return $this->core->db->insert('hubby_news_setting',array(
+						'EVERYONEPOST'			=>		$APC,	
+						'APPROVEBEFOREPOST'		=>		$VC,	
+					));
+				}
+			}
+			public function getBlogsterSetting()
+			{
+				$query	=	$this->core->db->get('hubby_news_setting');
+				$result	=	$query->result_array();
+				return $result[0];
+			}
+			public function getSpeComment($id)
+			{
+				$query		=	$this->core->db->where(array('ID'=>$id))->get('hubby_comments');
+				$result		=	$query->result_array();
+				if(count($result) == 0): return false;endif; // return false if comment doesn't exist
+				if($result[0]['AUTEUR'] == '0')
+				{
+					$result[0]['AUTEUR']	=	$result[0]['OFFLINE_AUTEUR'];
+				}
+				$article	=	$this->getSpeNews($result[0]['REF_ART']);
+				$result[0]['ARTICLE_TITLE']	=	$article[0]['TITLE'];
+				return $result[0];
+			}
+			public function approveComment($id)
+			{
+				if($comment	=	$this->getSpeComment($id)) // If comment exist
+				{
+					return $this->core->db->where('ID',$id)->update('hubby_comments',array('SHOW'=>'1'));
+				}
+				return false;
+			}
+			public function disapproveComment($id)
+			{
+				if($comment	=	$this->getSpeComment($id)) // If comment exist
+				{
+					return $this->core->db->where('ID',$id)->update('hubby_comments',array('SHOW'=>'0'));
+				}
+				return false;
+			}
+			public function deleteComment($id)
+			{
+				if($comment	=	$this->getSpeComment($id)) // If comment exist
+				{
+					return $this->core->db->where(array('ID'=>$id))->delete('hubby_comments');
+				}
+				return false;
+			}
 		}
 	}
 	if(class_exists('hubby'))
@@ -277,17 +389,27 @@ $NOTICE_SUPER_ARRAY = $or;
 			}
 			public function countComments($id)
 			{
+				$option			=	$this->getBlogsterSetting();
+				if($option['APPROVEBEFOREPOST'] == 1) // Get only approuved comments
+				{
+					$this->core->db->where('SHOW',1);
+				}
 				$this->core->db			->where(array('REF_ART'=>$id));
 				$query = $this->core->db	->get('hubby_comments');
 				return count($query->result_array());
 			}
 			public function getComments($id,$start,$end)
 			{
+				$option			=	$this->getBlogsterSetting();
+				if($option['APPROVEBEFOREPOST'] == 1) // Get only approuved comments
+				{
+					$this->core->db->where('SHOW',1);
+				}
 				$this->core->db			->where(array('REF_ART'=>$id));
 				$query = $this->core->db->limit($end,$start)->get('hubby_comments');
 				return $query->result_array();
 			}
-			public function postComment($id,$content)
+			public function postComment($id,$content,$auteur,$email)
 			{
 				if(!$this->users->isConnected())
 				{
@@ -296,12 +418,16 @@ $NOTICE_SUPER_ARRAY = $or;
 				else
 				{
 					$user_id 			=	$this->users->current('ID');
+					$auteur				=	'';
+					$email				=	$this->users->current('EMAIL');
 				}
-				$comment				=	array(
-					'REF_ART'			=> $id,
-					'CONTENT'			=> $content,
-					'AUTEUR'			=> $user_id,
-					'DATE'				=> $this->hubby->timestamp()
+				$comment					=	array(
+					'REF_ART'				=> 	$id,
+					'CONTENT'				=> 	$content,
+					'AUTEUR'				=> 	$user_id,
+					'OFFLINE_AUTEUR'		=>	$auteur,
+					'OFFLINE_AUTEUR_EMAIL'	=>	$email,
+					'DATE'					=> 	$this->hubby->timestamp()
 				);
 				return $this->core->db	->insert('hubby_comments',$comment);
 			}
@@ -322,6 +448,12 @@ $NOTICE_SUPER_ARRAY = $or;
 				}
 				$query = $this->core->db	->get('hubby_news');
 				return $query->result_array();
+			}
+			public function getBlogsterSetting()
+			{
+				$query	=	$this->core->db->get('hubby_news_setting');
+				$result	=	$query->result_array();
+				return $result[0];
 			}
 		}	
 	}

@@ -57,7 +57,7 @@
 			{
 				$userdata		=	$this->core->users_global->getUser($c['AUTEUR']);
 				$theme->defineSBP_comments(
-					$author			=	(count($userdata) == 0) ? 'Utilisateur introuvable' : $userdata['PSEUDO'],
+					$author			=	$userdata == FALSE ? $c['OFFLINE_AUTEUR'] : $userdata['PSEUDO'],
 					$authorLink		=	'#',
 					$content		=	$c['CONTENT'],
 					$timestamp		=	$this->core->hubby->timespan($c['DATE'])
@@ -81,31 +81,71 @@
 			$email	=	'';
 		}
 		// REPLY FORM
-		$theme->defineForm(array(
-			'text'			=>	'Pseudo',
-			'name'			=>	'pseudo',
-			'value'			=>	$pseudo,
-			'subtype'		=>	'text',
-			'type'			=>	'input'
-		));
-		$theme->defineForm(array(
-			'text'			=>	'Entrer votre mail',
-			'name'			=>	'mail',
-			'value'			=>	$email,
-			'subtype'		=>	'text',
-			'type'			=>	'input'
-		));
-		$theme->defineForm(array(
-			'text'			=>	'Entrer votre commentaire',
-			'name'			=>	'content',
-			'subtype'		=>	'text',
-			'type'			=>	'textarea'
-		));
-		$theme->defineForm(array(
-			'subtype'		=>	'submit',
-			'value'			=>	'Poster',
-			'type'			=>	'input'
-		));
+		if($setting['EVERYONEPOST'] == 0)
+		{
+			if($userUtil->isConnected())
+			{
+				$theme->defineForm(array(
+					'text'			=>	'Pseudo',
+					'name'			=>	'pseudo',
+					'value'			=>	$pseudo,
+					'subtype'		=>	'text',
+					'type'			=>	'input'
+				));
+				$theme->defineForm(array(
+					'text'			=>	'Entrer votre mail',
+					'name'			=>	'mail',
+					'value'			=>	$email,
+					'subtype'		=>	'text',
+					'type'			=>	'input'
+				));
+				$theme->defineForm(array(
+					'text'			=>	'Entrer votre commentaire',
+					'name'			=>	'content',
+					'subtype'		=>	'text',
+					'type'			=>	'textarea'
+				));
+				$theme->defineForm(array(
+					'subtype'		=>	'submit',
+					'value'			=>	'Poster',
+					'type'			=>	'input'
+				));
+			}
+			else
+			{
+				$core->notice->push_notice(notice('connectToComment'));
+			}
+		}
+		else
+		{
+			
+				$theme->defineForm(array(
+					'text'			=>	'Pseudo',
+					'name'			=>	'pseudo',
+					'value'			=>	$pseudo,
+					'subtype'		=>	'text',
+					'type'			=>	'input'
+				));
+				$theme->defineForm(array(
+					'text'			=>	'Entrer votre mail',
+					'name'			=>	'mail',
+					'value'			=>	$email,
+					'subtype'		=>	'text',
+					'type'			=>	'input'
+				));
+				$theme->defineForm(array(
+					'text'			=>	'Entrer votre commentaire',
+					'name'			=>	'content',
+					'subtype'		=>	'text',
+					'type'			=>	'textarea'
+				));
+				$theme->defineForm(array(
+					'subtype'		=>	'submit',
+					'value'			=>	'Poster',
+					'type'			=>	'input'
+				));
+			
+		}		
 		// Affichage du single article
 		$theme->parseBlog();
 	}
@@ -173,6 +213,5 @@
 		$theme->defineContactAddressItem('phone','2304958576');
 		$theme->defineContactAddressItem('email','fakecontact@fakebox.com');
 		$theme->defineContactFormHeader();
-		$theme->
 		$theme->parseContact();
 	}

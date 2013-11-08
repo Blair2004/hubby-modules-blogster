@@ -13,31 +13,23 @@ class Hubby_installer
 		$this->appType		=	'MODULE';
 		$this->appTableField	=	array(
 			'NAMESPACE'		=> 'news',
-			'HUMAN_NAME'	=> 'Gestionnaire d\'articles',
+			'HUMAN_NAME'	=> 'Bloster - Le gestionnaire d\'articles',
 			'AUTHOR'		=> 'Hubby Group',
 			'DESCRIPTION'	=> 'Créer, modifier et publié des articles pour votre blog.',
 			'TYPE'			=> 'BYPAGE',
-			'HUBBY_VERS'	=> 0.9
+			'HUBBY_VERS'	=> 0.91
 		);
-		$this->appVers		=	0.9;
-		$this->appAdminWidgetTableField[]	=	array(
-			'FILE_LOCATION'		=>	'/quickpress.php',
-			'CLASS_NAME'		=>	'quick_press',
-			'HUMAN_NAME'		=>	'Quick Press'
-		);
-			
-		$this->appAdminWidgetTableField[]	=	array(
-			'FILE_LOCATION'		=>	'/statistics.php',
-			'CLASS_NAME'		=>	'statistics',
-			'HUMAN_NAME'		=>	'Statistiques'
-		);
+		$this->appVers		=	0.91;
 		$this->appSql[]	=	
 		'CREATE TABLE IF NOT EXISTS `hubby_comments` (
 		  `ID` int(11) NOT NULL AUTO_INCREMENT,
 		  `REF_ART` int(11) NOT NULL,
+		  `SHOW` int(11) NOT NULL,
 		  `CONTENT` text NOT NULL,
 		  `DATE` varchar(200) NOT NULL,
 		  `AUTEUR` int(11) NOT NULL,
+		  `OFFLINE_AUTEUR` varchar(200) NOT NULL,
+		  `OFFLINE_AUTEUR_EMAIL` varchar(200) NOT NULL,
 		  PRIMARY KEY (`ID`)
 		) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;';
 		$this->appSql[]	=	
@@ -50,6 +42,14 @@ class Hubby_installer
 		  `AUTEUR` int(11) NOT NULL,
 		  `ETAT` varchar(5) NOT NULL,
 		  `IMAGE` varchar(200) NOT NULL,
+		  PRIMARY KEY (`ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+		';
+		$this->appSql[]	=	
+		'CREATE TABLE IF NOT EXISTS `hubby_news_setting` (
+		  `ID` int(11) NOT NULL AUTO_INCREMENT,
+		  `EVERYONEPOST` int(11) NOT NULL,
+		  `APPROVEBEFOREPOST` int(200) NOT NULL,
 		  PRIMARY KEY (`ID`)
 		) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 		';
@@ -86,6 +86,19 @@ class Hubby_installer
 			'action_description'	=>	'Action qui permet &agrave; tout utilisateur de g&eacute;rer les cat&eacute;gories',
 			'mod_namespace'			=>	'news'
 		);
+		$this->appAction[]			=	array(
+			'action'				=>	'blogster_setting',
+			'action_name'			=>	'Gestion des param&ecirc;tres',
+			'action_description'	=>	'Cette action permet de modifier les param&ectres avanc&eacute;s.',
+			'mod_namespace'			=>	'news'
+		);
+		$this->appAction[]			=	array(
+			'action'				=>	'blogster_manage_comments',
+			'action_name'			=>	'Gestion des commentaires',
+			'action_description'	=>	'Cette action permet de g&eacute;rer les commentaires.',
+			'mod_namespace'			=>	'news'
+		);
+		
 	}
 	public function datas()
 	{
