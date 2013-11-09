@@ -76,6 +76,17 @@
                         ?>
                         </tbody>
                     </table>
+                    <?php
+					if(is_array($pagination[4]))
+					{
+						foreach($pagination[4] as $p)
+						{
+							?>
+                            <a style="padding:2px 5px; display:block; float:left; margin:0px 4px 0px 0px;" href="<?php echo $p['link'];?>" class="<?php echo $p['state'];?>"><?php echo $p['text'];?></a>
+                            <?php
+						}
+					}
+					?>
                 </div>
 			</div>
 		</div>

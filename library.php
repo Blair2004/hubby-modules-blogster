@@ -68,7 +68,7 @@ $NOTICE_SUPER_ARRAY = $or;
 			public function countNews()
 			{
 				$query = $this->core->db->get('hubby_news');
-				return $query->result_array();
+				return count($query->result_array());
 			}
 			public function getNews($start,$end)
 			{

@@ -10,7 +10,7 @@
             <div class="page-region-content">
                 <div class="hub_table">
                 	<h2>Liste des cat&eacute;gories</h2>
-                    <table cellpadding="0" cellspacing="0">
+                    <table class="striped bordered">
                         <thead>
                             <tr>
                                 <td>Nom</td>
@@ -28,7 +28,7 @@
                             <tr>
                                 <td class="action"><a class="view" href="<?php echo $this->core->url->site_url(array('admin','open','modules',$module[0]['ID'],'category','manage',$g['ID']));?>"><?php echo $g['CATEGORY_NAME'];?></a></td>
                                 <td><?php echo $g['DESCRIPTION'];?></td>
-                                <td><?php echo $g['DATE'];?></td>
+                                <td><?php echo timespan(strtotime($g['DATE']));?></td>
                             </tr>
                         <?php
                             }
@@ -44,6 +44,17 @@
                         ?>
                         </tbody>
                     </table>
+                    <?php
+					if(is_array($pagination[4]))
+					{
+						foreach($pagination[4] as $p)
+						{
+							?>
+                            <a style="padding:2px 5px; display:block; float:left; margin:0px 4px 0px 0px;" href="<?php echo $p['link'];?>" class="<?php echo $p['state'];?>"><?php echo $p['text'];?></a>
+                            <?php
+						}
+					}
+					?>
                     <div>
 					<?php echo $this->core->notice->parse_notice();?>
                     </div>

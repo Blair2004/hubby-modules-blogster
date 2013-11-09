@@ -40,7 +40,6 @@ class News_module_controller
 		$this->core->form_validation->set_rules('content','Contenu','required|min_length[3]|max_length[1000]');
 		if($this->core->form_validation->run())
 		{
-			var_dump('DODE');
 			// Provisoire $this->input->post('author');
 			$result	=	$this->data['news']->postComment($id,$this->core->input->post('content'),$this->core->input->post('pseudo'),$this->core->input->post('email'));
 			if($result)

@@ -24,10 +24,14 @@ class News_admin_controller
 		$this->data['lmenu']			=	$this->core->load->view(VIEWS_DIR.'/admin/left_menu',$this->data,true,TRUE);
 		$this->linnk					=	MODULES_DIR.$this->moduleData['ENCRYPTED_DIR'].'/';
 	}
-	public function index()
+	public function index($page	= 1)
 	{
+		$this->data['ttNews']		=	$this->news->countNews();
+		$this->data['pagination']	=	$this->core->hubby->paginate(10,$this->data['ttNews'],1,'bg-color-blue fg-color-white','bg-color-white fg-color-blue',$page,$this->core->url->site_url(array('admin','open','modules',$this->moduleData['ID'],'index')).'/',$ajaxis_link=null);
+		if($this->data['pagination'][3] == FALSE): $this->core->url->redirect(array('error','code','page404'));endif; // redirect if page incorrect
+		
 		$this->hubby->setTitle('News - Page d\'administration');
-		$this->data['getNews']		=	$this->news->getNews(0,50);
+		$this->data['getNews']		=	$this->news->getNews($this->data['pagination'][1],$this->data['pagination'][2]);
 		$this->data['body']			=	$this->core->load->view(MODULES_DIR.$this->moduleData['ENCRYPTED_DIR'].'/views/main',$this->data,true,TRUE);
 		
 		return $this->data['body'];
@@ -121,17 +125,21 @@ class News_admin_controller
 		$this->data['body']			=	$this->core->load->view(MODULES_DIR.$this->moduleData['ENCRYPTED_DIR'].'/views/edit',$this->data,true,TRUE);
 		return $this->data['body'];
 	}
-	public function category($e = '',$i = null)
+	public function category($e = 'index',$i = null)
 	{
 		if(!$this->core->users_global->isSuperAdmin()	&& !$this->hubby_admin->adminAccess('modules','category_manage',$this->core->users_global->current('PRIVILEGE')))
 		{
 			$this->core->url->redirect(array('admin','index?notice=accessDenied'));
 		}
-		if($e == '')
+		if($e == 'index')
 		{
+			if($i	==	null): $i	=	1;endif; // affecte un lorsque la page n\'est pas correctement défini
+			$page					=&	$i; // don't waste memory
 			$this->data['ttCat']		=	$this->news->countCat();
-			$this->data['getCat']		=	$this->news->getCat(0,100);
-			$this->hubby->setTitle('News - Gestion des cat&eacute;gories');
+			$this->data['pagination']	=	$this->core->hubby->paginate(10,$this->data['ttCat'],1,'bg-color-blue fg-color-white','bg-color-white fg-color-blue',$page,$this->core->url->site_url(array('admin','open','modules',$this->moduleData['ID'],'category','index')).'/',$ajaxis_link=null);
+			if($this->data['pagination'][3] == FALSE): $this->core->url->redirect(array('error','code','page404'));endif; // redirect if page incorrect
+			$this->data['getCat']		=	$this->news->getCat($this->data['pagination'][1],$this->data['pagination'][2]);
+			$this->hubby->setTitle($this->moduleData['HUMAN_NAME'].' - Gestion des cat&eacute;gories');
 			$this->hubby->loadEditor(2);
 			
 			$this->data['body']			=	$this->core->load->view(MODULES_DIR.$this->moduleData['ENCRYPTED_DIR'].'/views/category',$this->data,true,TRUE);
