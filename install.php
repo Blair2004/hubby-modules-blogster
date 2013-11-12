@@ -17,10 +17,11 @@ class Hubby_installer
 			'AUTHOR'		=> 'Hubby Group',
 			'DESCRIPTION'	=> 'Créer, modifier et publié des articles pour votre blog.',
 			'TYPE'			=> 'BYPAGE',
+			'HAS_WIDGET'	=>	1, // To say TRUE :D
 			'HUBBY_VERS'	=> 0.91
 		);
 		$this->appVers		=	0.91;
-		$this->appSql[]	=	
+		$this->appSql[]		=	
 		'CREATE TABLE IF NOT EXISTS `hubby_comments` (
 		  `ID` int(11) NOT NULL AUTO_INCREMENT,
 		  `REF_ART` int(11) NOT NULL,
@@ -42,6 +43,7 @@ class Hubby_installer
 		  `AUTEUR` int(11) NOT NULL,
 		  `ETAT` varchar(5) NOT NULL,
 		  `IMAGE` varchar(200) NOT NULL,
+		  `VIEWED` int(11),
 		  PRIMARY KEY (`ID`)
 		) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 		';
@@ -49,7 +51,9 @@ class Hubby_installer
 		'CREATE TABLE IF NOT EXISTS `hubby_news_setting` (
 		  `ID` int(11) NOT NULL AUTO_INCREMENT,
 		  `EVERYONEPOST` int(11) NOT NULL,
-		  `APPROVEBEFOREPOST` int(200) NOT NULL,
+		  `APPROVEBEFOREPOST` int(11) NOT NULL,
+		  `WIDGET_CATEGORY_LIMIT` int(11) NOT NULL,
+		  `WIDGET_MOSTREADED_LIMIT` int(11) NOT NULL,
 		  PRIMARY KEY (`ID`)
 		) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 		';

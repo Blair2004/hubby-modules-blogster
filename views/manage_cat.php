@@ -1,6 +1,7 @@
 <div id="body">
     <div class="page secondary with-sidebar">
-        <div class="page-header">
+        <div id="canvasBubbles" style="position:absolute; top:0; height:100px; width:100%;float:left;"></div>
+        <div class="page-header" style="position:relative;">
             <div class="page-header-content">
                 <h1>Gestionnaire de cat&eacute;gorie<small></small></h1>
             <a class="back-button big page-back" href="<?php echo $this->core->url->site_url(array('admin','open','modules',$module[0]['ID'],'category'));?>"></a></div>

@@ -269,7 +269,7 @@ $NOTICE_SUPER_ARRAY = $or;
 			{
 				$query	=	$this->core->db->get('hubby_news_setting');
 				$result	=	$query->result_array();
-				return $result[0];
+				return array_key_exists(0,$result) ? $result[0] : false;
 			}
 			public function getSpeComment($id)
 			{
@@ -308,6 +308,44 @@ $NOTICE_SUPER_ARRAY = $or;
 				}
 				return false;
 			}
+			public function updateWidgetSetting($option,$value)
+			{
+				if($option	==	'CAT')
+				{
+					$query		=	$this->core->db->get('hubby_news_setting');
+					$result		=	$query->result_array();
+					if($result)
+					{
+						return	$this->core->db->update('hubby_news_setting',array(
+							'WIDGET_CATEGORY_LIMIT'		=>	$value,
+						));	
+					}
+					else
+					{
+						return $this->core->db->insert('hubby_news_setting',array(
+							'WIDGET_CATEGORY_LIMIT'		=>	$value,
+						));	
+					}
+				}
+				else if($option	==	'MOSTREADED')
+				{
+					$query		=	$this->core->db->get('hubby_news_setting');
+					$result		=	$query->result_array();
+					if($result)
+					{
+						return	$this->core->db->update('hubby_news_setting',array(
+							'WIDGET_MOSTREADED_LIMIT'		=>	$value,
+						));	
+					}
+					else
+					{
+						return $this->core->db->insert('hubby_news_setting',array(
+							'WIDGET_MOSTREADED_LIMIT'		=>	$value,
+						));	
+					}
+				}
+				return false;
+			}
 		}
 	}
 	if(class_exists('hubby'))
@@ -330,7 +368,7 @@ $NOTICE_SUPER_ARRAY = $or;
 				{
 					$query	=	$this->core->db->get('hubby_news_category');
 				}
-				else if($start != null && $end == null)
+				else if(is_numeric($start) && !is_numeric($end))
 				{
 					$query	=	$this->core->db->where('ID',$start)->get('hubby_news_category');
 					$ar		=	$query->result_array();
@@ -361,7 +399,7 @@ $NOTICE_SUPER_ARRAY = $or;
 				{
 					return array(
 						'name'		=>$data[0]['CATEGORY_NAME'],
-						'url'		=>$this->core->url->controller().'/category/'.$id,
+						'url'		=>$this->core->url->site_url($this->core->url->controller()).'/category/'.$this->core->hubby->urilizeText($data[0]['CATEGORY_NAME']).'/'.$id,
 						'desc'		=>$data[0]['DESCRIPTION']
 					);
 				}
@@ -442,7 +480,7 @@ $NOTICE_SUPER_ARRAY = $or;
 			{
 				$this->core->db			->where('ETAT',1)
 										->where('CATEGORY_ID',$catid);
-				if(is_finite($start) && is_finite($end))
+				if(is_numeric($start) && is_numeric($end))
 				{
 					$this->core->db->order_by('ID','desc')->limit($end,$start);
 				}
@@ -454,6 +492,26 @@ $NOTICE_SUPER_ARRAY = $or;
 				$query	=	$this->core->db->get('hubby_news_setting');
 				$result	=	$query->result_array();
 				return $result[0];
+			}
+			public function pushView($arid)
+			{
+				$art	=	$this->getSpeNews($arid);
+				if($art)
+				{
+					return $this->core->db->where('ID',$arid)->update('hubby_news',array(
+						'VIEWED'		=>	(int)$art[0]['VIEWED']+1
+					));
+				}
+				return false;
+			}
+			public function getMostViewed($start,$end)
+			{
+				$this->core->db			->from('hubby_news')
+										->where('ETAT',1)
+										->order_by('VIEWED','DESC')
+										->limit($end,$start);
+				$query 					= $this->core->db->get();
+				return $query->result_array();
 			}
 		}	
 	}

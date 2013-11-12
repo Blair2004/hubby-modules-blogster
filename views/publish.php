@@ -1,6 +1,7 @@
 <div id="body">
     <div class="page secondary with-sidebar">
-        <div class="page-header">
+        <div id="canvasBubbles" style="position:absolute; top:0; height:100px; width:100%;float:left;"></div>
+        <div class="page-header" style="position:relative;">
             <div class="page-header-content">
                 <h1><?php echo $module[0]['HUMAN_NAME'];?><small></small></h1>
             <a class="back-button big page-back" href="<?php echo $this->core->url->site_url(array('admin','modules'));?>"></a></div>

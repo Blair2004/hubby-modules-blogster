@@ -20,12 +20,11 @@ class News_module_controller
 		
 		$this->data['ttNews']		=		$this->data['news']->countNews();
 		// Load View		
-		$this->data['section']		=		'main';
 		$this->data['pagination']	=	$this->core->hubby->paginate(5,$this->data['ttNews'],1,'on','off',$page,$this->core->url->site_url(array('blog','index')).'/',$ajaxis_link=null);
 		$this->data['pagination'][3]=== false ? $this->core->url->redirect(array('error','code','page404')) : null;
 		$this->data['getNews']		=		$this->data['news']->getNews($this->data['pagination'][1],$this->data['pagination'][2]);
 		$this->data['currentPage']	=	$page;
-		$this->data['module_content']		=	$this->core->load->view(MODULES_DIR.$this->data['module'][0]['ENCRYPTED_DIR'].'/module_view',$this->data,true,TRUE);
+		$this->data['module_content']		=	$this->core->load->view(MODULES_DIR.$this->data['module'][0]['ENCRYPTED_DIR'].'/views/common_main',$this->data,true,TRUE);
 		
 		$this->data['theme']->header($this->data);
 		$this->data['theme']->body($this->data);
@@ -58,28 +57,19 @@ class News_module_controller
 		{
 			$this->core->url->redirect(array('error/code/page404'));
 		}
+		$this->data['news']->pushView($this->data['GetNews'][0]['ID']);
 		$this->hubby->setTitle('Article - '.$this->data['GetNews'][0]['TITLE']);
 		$this->hubby->setDescription($this->data['page'][0]['PAGE_DESCRIPTION']);
 		$this->data['theme']->definePageTitle($this->data['page'][0]['PAGE_TITLE']);
 		$this->data['theme']->definePageDescription($this->data['page'][0]['PAGE_DESCRIPTION']);
 		
 		// Load View		
-		$this->data['section']		=		'open';
-		$this->data['module_content']		=	$this->core->load->view(MODULES_DIR.$this->data['module'][0]['ENCRYPTED_DIR'].'/module_view',$this->data,true,TRUE);
+		$this->data['module_content']		=	$this->core->load->view(MODULES_DIR.$this->data['module'][0]['ENCRYPTED_DIR'].'/views/common_open',$this->data,true,TRUE);
 		// Load View From Theme selected;
 		$this->data['theme']->header($this->data);
 		$this->data['theme']->body($this->data);
 	}
-	public function productTest()
-	{
-		$this->data['section']		=		'productsTest';
-		$this->data['module_content']		=	$this->core->load->view(MODULES_DIR.$this->data['module'][0]['ENCRYPTED_DIR'].'/module_view',$this->data,true,TRUE);
-		// Load View From Theme selected;
-		$this->data['theme']->setPrototype('GALLERY');
-		$this->data['theme']->header($this->data);
-		$this->data['theme']->body($this->data);
-	}
-	public function category($catid = null, $page = 1)
+	public function category($cat_text,$catid = null, $page = 1)
 	{
 		if($catid == null || $catid == 0)
 		{
@@ -92,13 +82,13 @@ class News_module_controller
 		$this->data['theme']->definePageDescription($this->data['category']['desc']);
 
 		$this->data['ttNews']	=	$this->data['news']->countArtFromCat($catid);
-		$this->data['pagination']	=	$this->core->hubby->paginate(10,$this->data['ttNews'],1,'active','',$page,$this->core->url->site_url(array($this->core->url->controller(),'category',$catid)).'/',$ajaxis_link=null);
+		$this->data['pagination']	=	$this->core->hubby->paginate(10,$this->data['ttNews'],1,'active','',$page,$this->core->url->site_url(array($this->core->url->controller(),'category',$cat_text,$catid)).'/',$ajaxis_link=null);
 		$this->data['pagination'][3]=== false ? $this->core->url->redirect(array('error','code','page404')) : null;
 		$this->data['currentPage']	=	$page;
 		$this->data['getNews']	=	$this->data['news']->getArtFromCat($catid,$this->data['pagination'][1],$this->data['pagination'][2]);
 		
 		$this->data['section']	=		'category';
-		$this->data['module_content']		=	$this->core->load->view(MODULES_DIR.$this->data['module'][0]['ENCRYPTED_DIR'].'/module_view',$this->data,true,TRUE);
+		$this->data['module_content']		=	$this->core->load->view(MODULES_DIR.$this->data['module'][0]['ENCRYPTED_DIR'].'/views/common_category',$this->data,true,TRUE);
 		// ----------------------------------------------------------------------------------------------------------------------------------//
 		$this->data['theme']->header($this->data);
 		$this->data['theme']->body($this->data);
@@ -108,8 +98,7 @@ class News_module_controller
 		$this->hubby->setTitle('Test');
 		$this->hubby->setDescription('Nothing');
 		// Load View		
-		$this->data['section']		=		'blogtest';
-		$this->data['module_content']		=	$this->core->load->view(MODULES_DIR.$this->data['module'][0]['ENCRYPTED_DIR'].'/module_view',$this->data,true,TRUE);
+		$this->data['module_content']		=	$this->core->load->view(MODULES_DIR.$this->data['module'][0]['ENCRYPTED_DIR'].'/views/common_test',$this->data,true,TRUE);
 		
 		$this->data['theme']->header($this->data);
 		$this->data['theme']->body($this->data);

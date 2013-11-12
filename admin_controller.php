@@ -296,20 +296,45 @@ class News_admin_controller
 	{
 		if($this->core->users_global->isSuperAdmin()	|| $this->hubby_admin->adminAccess('modules','blogster_setting',$this->core->users_global->current('PRIVILEGE')))
 		{
-			$this->core->load->library('form_validation');
-			$this->core->form_validation->set_rules('validateall','','');
-			$this->core->form_validation->set_rules('allowPublicComment','','');
-			$this->core->form_validation->set_rules('update','','');
-			if($this->core->form_validation->run())
+			if(isset($_POST['update']))
 			{
-				if($this->news->setBlogsterSetting($this->core->input->post('validateall'),$this->core->input->post('allowPublicComment')))
+				$this->core->load->library('form_validation');
+				$this->core->form_validation->set_rules('validateall','','');
+				$this->core->form_validation->set_rules('allowPublicComment','','');
+				$this->core->form_validation->set_rules('update','','');
+				if($this->core->form_validation->run())
+				{
+					if($this->news->setBlogsterSetting($this->core->input->post('validateall'),$this->core->input->post('allowPublicComment')))
+					{
+						$this->core->notice->push_notice(notice('done'));
+					}
+					else
+					{
+						$this->core->notice->push_notice(notice('error_occured'));
+					}; // modification des parametres
+				}
+			}
+			if(isset($_POST['limit_submiter']))
+			{
+				if($this->news->updateWidgetSetting('CAT',$this->core->input->post('limitcat')))
 				{
 					$this->core->notice->push_notice(notice('done'));
 				}
 				else
 				{
 					$this->core->notice->push_notice(notice('error_occured'));
-				}; // modification des parametres
+				}
+			}
+			else if(isset($_POST['mostreaded_submiter']))
+			{
+				if($this->news->updateWidgetSetting('MOSTREADED',$this->core->input->post('mostreaded')))
+				{
+					$this->core->notice->push_notice(notice('done'));
+				}
+				else
+				{
+					$this->core->notice->push_notice(notice('error_occured'));
+				}
 			}
 			$this->data['setting']		=	$this->news->getBlogsterSetting();
 			$this->hubby->setTitle('Blogster - Param&ecirc;tres avanc&eacute;');
